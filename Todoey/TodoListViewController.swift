@@ -9,7 +9,7 @@ import UIKit
 
 class TodoListViewController: UITableViewController {
     
-    let itemArray = ["Find Mike", "Buy Eggos", "Destroy Demogorgon"]
+    var itemArray = ["Find Mike", "Buy Eggos", "Destroy Demogorgon"]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,12 +18,13 @@ class TodoListViewController: UITableViewController {
     
     // MARK - Tableview Datasource Methods
     
+    // Number of rows needed
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return itemArray.count
     }
     
+    // Add an item in the array in each row
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
         cell.textLabel?.text = itemArray[indexPath.row]
         return cell
@@ -31,7 +32,6 @@ class TodoListViewController: UITableViewController {
     
     // MARK - TableView Delegate Methods
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //print(itemArray[indexPath.row])
         
         // Add a checkmark when you select a row
         if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
@@ -43,6 +43,33 @@ class TodoListViewController: UITableViewController {
         // deselect after clicking on a row
         tableView.deselectRow(at: indexPath, animated: true)
     }
+    
+    // MARK - Add New Items
+    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+        // it holds the value inserted in the textfield
+        var textField = UITextField()
+        
+        // create an alert
+        let alert = UIAlertController(title: "Add New Todoey Item", message: "", preferredStyle: .alert)
+        // Add an action on the alert
+        let action = UIAlertAction(title: "Add Item ", style: .default) { (action) in
+            // What will happen once the user clicks the add item button on our UIAlert
+            // Append the new item in the array
+            self.itemArray.append(textField.text!)
+            // Reloads the rows of the table view
+            self.tableView.reloadData()
+        }
+        // Create a text field in the alert
+        alert.addTextField { (alertTextField) in
+            alertTextField.placeholder = "Create new item"
+            // send the inserted data to the textfield var
+            textField = alertTextField
+        }
+        // Connect the alert controller to alert action
+        alert.addAction(action)
+        present(alert, animated: true, completion: nil)
+    }
+    
 
 
 }
